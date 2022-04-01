@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card } from 'primereact/card';
+// import { DataTable } from 'primereact/datatable';
 import './App.css';
 
 function App() {
@@ -34,8 +35,13 @@ function App() {
   const [persone, setPersone] = useState(elencoPersone);
   const [luoghi, setLuoghi] = useState(elencoLuoghi);
 
+  const [persona, setPersona] = useState(    {    id: '000',    name: ''  });
+
   function handleOnPersoneDragEnd(result) {
-    if (!result.destination) return;
+    if (!result.destination){
+      setPersona(result.source)
+    return; //se esce dal drag container
+  }
 
     const items = Array.from(persone);
     const [reorderedItem] = items.splice(result.source.index, 1);
@@ -57,27 +63,71 @@ function App() {
     <div className="App">
       <h2>Prova Drag and Drop</h2>
       <div className="p-grid p-ai-center">
-        <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center">
-          <h4>Area Drop</h4>
-          <Card>
-            <h4>Luogo: </h4>
-            {/* <DragDropContext onDragEnd={handleOnLuoghiDragEnd}>
+        <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center" id="border1">
+          <h3>Area Drop</h3>
+          <h4>Luogo: solo drop</h4>
+          <Card id="border1">
+            <DragDropContext onDragEnd={handleOnLuoghiDragEnd}>
               <Droppable droppableId="luoghi">
-                ...
+                {(provided) => (
+                  <ul className="luoghi" {...provided.droppableProps} ref={provided.innerRef}>
+                    {provided.placeholder}
+                  </ul>
+                )}
               </Droppable>
-            </DragDropContext> */}
-            <h4>Persona: </h4>
+            </DragDropContext>
+          </Card>
+          <h4>Persona: solo drop</h4>
+          <Card id="border1">
+            <span>{persona?.name}</span>
             {/* <DragDropContext onDragEnd={handleOnPersoneDragEnd}>
               <Droppable droppableId="persone">
-                ...
+                {(provided) => (
+                  <ul className="persone" {...provided.droppableProps} ref={provided.innerRef}>
+                    {persone.map(({ id, name }, index) => {
+                      return (
+                        <span key={id} draggableId={id} index={index}>
+                          {(provided) => (
+                            <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <p>{name}</p>
+                            </li>
+                          )}
+                        </span>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ul>
+                )}
               </Droppable>
             </DragDropContext> */}
           </Card>
         </div>
 
         <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center">
+          <h4>Lista Persone solo Drag</h4>
+          <Card id="border">
+            {(provided) => (
+              <ul className="persone" {...provided.droppableProps} ref={provided.innerRef}>
+                {persone.map(({ id, name }, index) => {
+                  return (
+                    <Draggable key={id} draggableId={id} index={index}>
+                      {(provided) => (
+                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                          <p>{name}</p>
+                        </li>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Card>
+        </div>
+
+        <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center">
           <h4>Lista Persone Drag</h4>
-          <Card>
+          <Card id="border">
             <DragDropContext onDragEnd={handleOnPersoneDragEnd}>
               <Droppable droppableId="persone">
                 {(provided) => (
@@ -103,7 +153,7 @@ function App() {
 
         <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center">
           <h4>Lista Luoghi Drag</h4>
-          <Card>
+          <Card id="border">
             <DragDropContext onDragEnd={handleOnLuoghiDragEnd}>
               <Droppable droppableId="luoghi">
                 {(provided) => (
@@ -124,6 +174,17 @@ function App() {
                 )}
               </Droppable>
             </DragDropContext>
+          </Card>
+        </div>
+
+
+        <div className="p-col-6 p-m-0 p-p-0 p-grid p-ai-center">
+          <h4>Tab Luoghi Drag</h4>
+          <Card id="border">
+            {/* <DataTable value={luoghi}>
+              <Column field="id" header="ID"></Column>
+              <Column field="name" header="Name"></Column>
+            </DataTable> */}
           </Card>
         </div>
       </div>
